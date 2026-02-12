@@ -23,4 +23,6 @@ docker-compose up
 
 ## TODO:
 - Add test interface where random users are created
-- Add tracking for matches
+- Add tracking interface for matches
+- Add algorithm for creating lobby
+- Add UML -> because of school project :)
