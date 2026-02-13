@@ -28,7 +28,7 @@ func Log(logType, msg string) {
 
 	defer currLogFile.Close()
 
-	if _, err := currLogFile.WriteString("\n" + time.Now().Format("2006/01/02 15:04:05") + logType + logMsg); err != nil {
+	if _, err := currLogFile.WriteString("\n" + time.Now().Format("2006/01/02 15:04:05") + logType + msg); err != nil {
 		log.Fatal(err)
 	}
 }

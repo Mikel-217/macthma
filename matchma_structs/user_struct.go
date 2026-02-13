@@ -23,6 +23,6 @@ type UserMatches struct {
 	UserPlace    uint
 	UserKills    uint
 	UserPlayTime time.Duration
-	MatchDate    time.DateTime
+	MatchDate    time.Time
 	UserId       uint // foreign key to Users Table
 }
