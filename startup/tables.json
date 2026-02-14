@@ -1,0 +1,14 @@
+[
+  {
+    "table-name": "Users",
+    "sql-command": "CREATE TABLE IF NOT EXISTS Users(UserId INT UNSIGNED NOT NULL AUTO_INCREMENT, UserName varchar(255), UserPW varchar(255), UserMail varchar(255), PRIMARY KEY(UserId));"
+  },
+  {
+    "table-name": "UserMatches",
+    "sql-command": "CREATE TABLE IF NOT EXISTS UserMatches(MatchId INT UNSIGNED NOT NULL AUTO_INCREMENT, UserPlace INT UNSIGNED, UserKills INT UNSIGNED, UserPlayTime INT, MatchDate DATETIME, UserId INT UNSIGNED NOT NULL, FOREIGN KEY(UserId) REFERENCES Users(UserId), PRIMARY KEY(MatchId));"
+  },
+  {
+    "table-name": "AccessTokens",
+    "sql-command": "CREATE TABLE IF NOT EXISTS AccessTokens(TokenId INT UNSIGNED NOT NULL AUTO_INCREMENT, TokenVal varchar(255), TokenExpiration DATETIME, PRIMARY KEY(TokenId));"
+  }
+]

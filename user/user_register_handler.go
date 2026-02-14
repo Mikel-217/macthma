@@ -39,7 +39,7 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 	// checks if the user is already registered
 	dbUser := dbuser.GetUserByMail(userST.UserMail)
 
-	if dbUser.UserMail == userST.UserMail {
+	if dbUser != nil && dbUser.UserMail == userST.UserMail {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

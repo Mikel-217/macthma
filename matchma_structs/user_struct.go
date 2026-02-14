@@ -5,8 +5,8 @@ import "time"
 type UserStruct struct {
 	UserId   uint
 	UserName string
-	UserMail string
 	UserPW   string // always hash this!!
+	UserMail string
 }
 
 // just for the code -> getting all data from a user

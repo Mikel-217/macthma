@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"mikel-kunze.com/matchma/logging"
+	"mikel-kunze.com/matchma/startup"
 	"mikel-kunze.com/matchma/user"
 )
 
@@ -23,6 +24,11 @@ func handleAuthentication(next http.Handler) http.Handler {
 }
 
 func main() {
+
+	if startup.CreateTables() {
+		logging.Log(logging.Information, "Setup successfull")
+		fmt.Println("Success!")
+	}
 
 	if os.Args[1] == "--testing" {
 		fmt.Println("Testing enabled")

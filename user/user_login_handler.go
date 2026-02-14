@@ -15,7 +15,7 @@ import (
 	matchmastructs "mikel-kunze.com/matchma/matchma_structs"
 )
 
-type JWT_Claims struct {
+type claims struct {
 	UserId uint
 	jwt.RegisteredClaims
 }
@@ -30,12 +30,18 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	strings.Replace(authenticationHeader, "Basic", "", 0)
+	auth := strings.Replace(authenticationHeader, "Basic ", "", 2)
 
-	encoded := base64.StdEncoding.EncodeToString([]byte(authenticationHeader))
+	encoded, err := base64.StdEncoding.DecodeString(auth)
+
+	if err != nil {
+		logging.Log(logging.Error, err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// its stored like this: username:PW
-	userCredentials := strings.Split(encoded, ":")
+	userCredentials := strings.Split(string(encoded), ":")
 
 	hashedPW, err := bcrypt.GenerateFromPassword([]byte(userCredentials[1]), 14)
 
@@ -47,7 +53,10 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 
 	user := dbuser.GetUserByName(userCredentials[0])
 
-	if user.UserName != userCredentials[0] && user.UserPW != string(hashedPW) {
+	if user != nil && user.UserName != userCredentials[0] && user.UserPW != string(hashedPW) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	} else if user == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -66,16 +75,15 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 // Generates a JWT
 func generateToken(user *matchmastructs.UserStruct) *string {
 
-	claims := &JWT_Claims{
+	claims := claims{
 		UserId: user.UserId,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "matchma.mikel-kunze.com",
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().AddDate(0, 0, 3)),
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(os.Getenv("JWT-Secret"))
 
 	if err != nil {
@@ -84,12 +92,12 @@ func generateToken(user *matchmastructs.UserStruct) *string {
 	}
 
 	query := "INSERT INTO AccessTokens VALUES(DEFAULT, ?, ?);"
-	queryArgs := []string{tokenString, time.Now().GoString()}
+	queryArgs := []string{tokenString, time.Now().Format(time.RFC3339)}
 
 	result := database.ExecuteSQL(query, queryArgs)
 
 	if result.ErrorMsg != nil {
-		logging.Log(logging.Error, err.Error())
+		logging.Log(logging.Error, result.ErrorMsg.Error())
 		return nil
 	}
 
