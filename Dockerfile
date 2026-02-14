@@ -7,3 +7,4 @@ COPY *.go .
 
 
 RUN ["go run main.go"]
+# RUN ["go run main.go --testing"]

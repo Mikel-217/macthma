@@ -17,5 +17,5 @@ func CreateDBConn() *sql.DB {
 		return nil
 	}
 
-	return &db
+	return db
 }

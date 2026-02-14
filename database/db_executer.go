@@ -9,41 +9,48 @@ import (
 // NOTE:
 // Only use this for executing DELETE, UPDATE or INSERT commads!!
 
-type result struct {
-	lastId   uint
-	errorMsg error
+type Result struct {
+	LastId   uint
+	ErrorMsg error
 }
 
-// This func needs the complete SQL-Statement as a string
+// This func needs the complete SQL-Statement as a string and it arguments as an string slice
 // It returns an struct with the last Id and an error to indicate success
-func ExecuteSQL(sqlQuery string) *result {
+func ExecuteSQL(sqlQuery string, args []string) *Result {
+
+	arguments := make([]interface{}, len(args))
+
+	// Converts the given strings to an interface
+	for i, arg := range args {
+		arguments[i] = arg
+	}
 
 	db := CreateDBConn()
 
 	if db == nil {
 
-		return &result{
-			lastId:   0,
-			errorMsg: errors.New("DB error"),
+		return &Result{
+			LastId:   0,
+			ErrorMsg: errors.New("DB error"),
 		}
 	}
 
 	defer db.Close()
 
-	queryResult, err := db.Exec(sqlQuery)
+	queryResult, err := db.Exec(sqlQuery, arguments...)
 
 	if err != nil {
 		logging.Log(logging.Error, err.Error())
-		return &result{
-			lastId:   0,
-			errorMsg: err,
+		return &Result{
+			LastId:   0,
+			ErrorMsg: err,
 		}
 	}
 
 	Id, _ := queryResult.LastInsertId()
 
-	return &result{
-		lastId:   Id,
-		errorMsg: nil,
+	return &Result{
+		LastId:   uint(Id),
+		ErrorMsg: nil,
 	}
 }
