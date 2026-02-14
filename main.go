@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"mikel-kunze.com/matchma/logging"
-	"mikel-kunze.com/matchma/matchmaking"
 	"mikel-kunze.com/matchma/user"
 )
 
@@ -16,7 +15,7 @@ func handleAuthentication(next http.Handler) http.Handler {
 		fmt.Println(r.RemoteAddr)
 		logging.Log(logging.Information, r.RemoteAddr)
 
-		// TODO: check for authentication
+		// TODO: check for authentication -> check if the accesstoken is in the db and valid
 
 		next.ServeHTTP(w, r)
 	})
@@ -38,7 +37,7 @@ func main() {
 	mux.HandleFunc("POST /login", user.HandleUserLogin)
 	mux.HandleFunc("POST /register", user.HandleUserRegister)
 
-	mux.Handle("/join-match", handleAuthentication(http.HandlerFunc(matchmaking.HandlePlayerJoin)))
+	mux.Handle("/join-match", handleAuthentication(http.HandlerFunc(user.HandlePlayerJoin)))
 
 	http.ListenAndServe(":8080", mux)
 

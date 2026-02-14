@@ -19,6 +19,7 @@ For testing edit the Dockerfile and uncomment the "RUN ["go run main.go --testin
 
 ## Enviromentvariables needed:
 - Database connection
+- JWT-Secret
 
 ## TODO:
 - Add db-setup service
