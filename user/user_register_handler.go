@@ -5,7 +5,9 @@ import (
 	"io"
 	"net/http"
 
+	"golang.org/x/crypto/bcrypt"
 	"mikel-kunze.com/matchma/database"
+	dbuser "mikel-kunze.com/matchma/database/db_user"
 	"mikel-kunze.com/matchma/logging"
 	matchmastructs "mikel-kunze.com/matchma/matchma_structs"
 )
@@ -33,7 +35,25 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	// TODO: Also check if the user email already exists!!
+
+	// checks if the user is already registered
+	dbUser := dbuser.GetUserByMail(userST.UserMail)
+
+	if dbUser.UserMail == userST.UserMail {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// hashes the pw from the given user
+	hashedPW, err := bcrypt.GenerateFromPassword([]byte(userST.UserPW), 14)
+
+	if err != nil {
+		logging.Log(logging.Error, err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	userST.UserPW = string(hashedPW)
 
 	query := "INSERT INTO Users VALUES(DEFAULT, ?, ?, ?);"
 	queryArgs := []string{userST.UserName, userST.UserPW, userST.UserMail}
@@ -47,5 +67,6 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// everything is ok :)
 	w.WriteHeader(http.StatusOK)
 }
