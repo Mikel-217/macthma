@@ -10,11 +10,11 @@ import (
 // Only use this for executing DELETE, UPDATE or INSERT commads!!
 
 type Result struct {
-	lastId   uint
-	errorMsg error
+	LastId   uint
+	ErrorMsg error
 }
 
-// This func needs the complete SQL-Statement as a string
+// This func needs the complete SQL-Statement as a string and it arguments as an string slice
 // It returns an struct with the last Id and an error to indicate success
 func ExecuteSQL(sqlQuery string, args []string) *Result {
 
@@ -30,8 +30,8 @@ func ExecuteSQL(sqlQuery string, args []string) *Result {
 	if db == nil {
 
 		return &Result{
-			lastId:   0,
-			errorMsg: errors.New("DB error"),
+			LastId:   0,
+			ErrorMsg: errors.New("DB error"),
 		}
 	}
 
@@ -42,15 +42,15 @@ func ExecuteSQL(sqlQuery string, args []string) *Result {
 	if err != nil {
 		logging.Log(logging.Error, err.Error())
 		return &Result{
-			lastId:   0,
-			errorMsg: err,
+			LastId:   0,
+			ErrorMsg: err,
 		}
 	}
 
 	Id, _ := queryResult.LastInsertId()
 
 	return &Result{
-		lastId:   uint(Id),
-		errorMsg: nil,
+		LastId:   uint(Id),
+		ErrorMsg: nil,
 	}
 }

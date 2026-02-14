@@ -10,6 +10,7 @@ import (
 	matchmastructs "mikel-kunze.com/matchma/matchma_structs"
 )
 
+// handels the registration of an user
 func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
@@ -34,13 +35,17 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: Also check if the user email already exists!!
 
-	query := "INSERT INTO Users VALUES(DEFAULT, ?, ?, ?)"
+	query := "INSERT INTO Users VALUES(DEFAULT, ?, ?, ?);"
 	queryArgs := []string{userST.UserName, userST.UserPW, userST.UserMail}
 
-	database.ExecuteSQL(query, queryArgs)
+	result := database.ExecuteSQL(query, queryArgs)
 
-	// TODO: error check!
+	// checks for an error
+	if result.ErrorMsg != nil {
+		logging.Log(logging.Error, result.ErrorMsg.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
-	return
 }
