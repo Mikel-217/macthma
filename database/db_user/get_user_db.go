@@ -17,7 +17,7 @@ func GetUserByMail(mail string) *matchmastructs.UserStruct {
 
 	var user matchmastructs.UserStruct
 
-	if err := db.QueryRow("SELECT * FROM Users WHERE UserMail = ?;", mail).Scan(&user); err != nil {
+	if err := db.QueryRow("SELECT * FROM Users WHERE UserMail = ?;", mail).Scan(&user.UserId, &user.UserName, &user.UserPW, &user.UserMail); err != nil {
 		logging.Log(logging.Error, err.Error())
 		return nil
 	}
@@ -36,7 +36,7 @@ func GetUserByName(userName string) *matchmastructs.UserStruct {
 
 	var user matchmastructs.UserStruct
 
-	if err := db.QueryRow("SELECT * FROM Users WHERE UserName = ?;", userName).Scan(&user); err != nil {
+	if err := db.QueryRow("SELECT * FROM Users WHERE UserName = ?;", userName).Scan(&user.UserId, &user.UserName, &user.UserPW, &user.UserMail); err != nil {
 		logging.Log(logging.Error, err.Error())
 		return nil
 	}

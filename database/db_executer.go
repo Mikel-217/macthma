@@ -28,7 +28,6 @@ func ExecuteSQL(sqlQuery string, args []string) *Result {
 	db := CreateDBConn()
 
 	if db == nil {
-
 		return &Result{
 			LastId:   0,
 			ErrorMsg: errors.New("DB error"),

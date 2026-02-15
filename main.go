@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"mikel-kunze.com/matchma/logging"
+	"mikel-kunze.com/matchma/startup"
 	"mikel-kunze.com/matchma/user"
 )
 
@@ -24,10 +27,25 @@ func handleAuthentication(next http.Handler) http.Handler {
 
 func main() {
 
+	if startup.CreateTables() {
+		logging.Log(logging.Information, "Setup successfull")
+		fmt.Println("Success setting fings up!")
+	}
+
 	if os.Args[1] == "--testing" {
-		fmt.Println("Testing enabled")
-		// TODO implement startup Service which creates 100 Players
-		// Create a channel where it returns done or not
+
+		playerCommand := strings.ReplaceAll(os.Args[2], "--player-count=", "")
+
+		// gets the given player count from the startup command
+		playerCount, err := strconv.ParseInt(playerCommand, 0, 0)
+
+		if err != nil {
+			logging.Log(logging.Error, err.Error())
+			// if an occurs set default val to 200
+			playerCount = 200
+		}
+
+		go startup.AddTesting(int(playerCount))
 	}
 
 	mux := http.NewServeMux()

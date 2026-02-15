@@ -1,10 +1,15 @@
-FROM baseimage #TODO add image
-
+FROM golang:latest
 
 WORKDIR /app
 
-COPY *.go .
+COPY go.mod go.sum ./
 
+RUN go mod download
 
-RUN ["go run main.go"]
-# RUN ["go run main.go --testing"]
+# TODO: Add dockerignore
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /matchma
+
+EXPOSE 8080
+CMD [ "/matchma" ]

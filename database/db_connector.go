@@ -4,13 +4,14 @@ import (
 	"database/sql"
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	"mikel-kunze.com/matchma/logging"
 )
 
 // Creates a new database connection
 func CreateDBConn() *sql.DB {
 
-	db, err := sql.Open("mysql", os.Getenv(""))
+	db, err := sql.Open("mysql", os.Getenv("DB-Conn"))
 
 	if err != nil {
 		logging.Log(logging.Error, err.Error())
