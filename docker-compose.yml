@@ -2,6 +2,7 @@ services:
   matchma-server:
     build: .
     # command: ["/matchma", "--prod"] # uncomment this if production enviroment
+    command: ["/matchma", "--testing", "--player-count=200"]
     depends_on:
       matchma-db:
         condition: service_healthy

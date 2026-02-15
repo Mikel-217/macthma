@@ -22,7 +22,6 @@ For production, uncomment the "command:" line
 - JWT-Secret
 
 ## TODO:
-- Add test interface where random users are created
 - Make middleware functional
 - Add tracking interface for matches
 - Add algorithm for creating lobby

@@ -12,7 +12,7 @@ type UserStruct struct {
 // just for the code -> getting all data from a user
 type UserInformation struct {
 	TotalKills    uint
-	TotalPlayTime time.Duration
+	TotalPlayTime int
 	TotalWins     uint
 	User          UserStruct
 }
@@ -22,7 +22,7 @@ type UserMatches struct {
 	MatchId      uint
 	UserPlace    uint
 	UserKills    uint
-	UserPlayTime time.Duration
+	UserPlayTime int // represents the minutes how long the player was in the given match
 	MatchDate    time.Time
 	UserId       uint // foreign key to Users Table
 }

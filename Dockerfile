@@ -12,5 +12,4 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /matchma
 
 EXPOSE 8080
-ENTRYPOINT ["/matchma"]
-CMD [ "--testing", "--player-count=200" ] # If you want more players for testing, change this number
+CMD [ "/matchma" ]

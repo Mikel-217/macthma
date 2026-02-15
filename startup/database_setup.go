@@ -21,7 +21,7 @@ func CreateTables() bool {
 	db := database.CreateDBConn()
 
 	if db == nil {
-		logging.Log(logging.Error, "Setup failed")
+		logging.Log(logging.Error, "Database connection failed")
 		panic("db Cannot start. See logs")
 	}
 
