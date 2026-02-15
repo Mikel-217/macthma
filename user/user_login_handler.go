@@ -84,7 +84,7 @@ func generateToken(user *matchmastructs.UserStruct) *string {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(os.Getenv("JWT-Secret"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT-Secret")))
 
 	if err != nil {
 		logging.Log(logging.Error, err.Error())
@@ -92,7 +92,7 @@ func generateToken(user *matchmastructs.UserStruct) *string {
 	}
 
 	query := "INSERT INTO AccessTokens VALUES(DEFAULT, ?, ?);"
-	queryArgs := []string{tokenString, time.Now().Format(time.RFC3339)}
+	queryArgs := []string{tokenString, time.Now().AddDate(0, 0, 3).Format("2006-01-02 15:04:05")}
 
 	result := database.ExecuteSQL(query, queryArgs)
 

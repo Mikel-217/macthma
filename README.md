@@ -15,17 +15,18 @@ docker-compose up
 
 ```
 
-For testing edit the Dockerfile and uncomment the "RUN ["go run main.go --testing"]"
+For production, uncomment the "command:" line 
 
 ## Enviromentvariables needed:
 - Database connection
 - JWT-Secret
 
 ## TODO:
-- Add db-setup service
 - Add test interface where random users are created
-- Add user-login
 - Make middleware functional
 - Add tracking interface for matches
 - Add algorithm for creating lobby
 - Add UML -> because of school project :)
+
+
+## Endpoints:
