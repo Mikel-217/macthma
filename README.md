@@ -26,6 +26,6 @@ For production, uncomment the "command:" line
 - Add tracking interface for matches
 - Add algorithm for creating lobby
 - Add UML -> because of school project :)
-
+- Make db_excecuter performant
 
 ## Endpoints:

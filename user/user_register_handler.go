@@ -39,6 +39,7 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 	// checks if the user is already registered
 	dbUser := dbuser.GetUserByMail(userST.UserMail)
 
+	// checks if the user is already registered
 	if dbUser != nil && dbUser.UserMail == userST.UserMail {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -53,6 +54,7 @@ func HandleUserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// sets the new PW for the user
 	userST.UserPW = string(hashedPW)
 
 	query := "INSERT INTO Users VALUES(DEFAULT, ?, ?, ?);"

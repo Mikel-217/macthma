@@ -34,7 +34,7 @@ func main() {
 
 	if os.Args[1] == "--testing" {
 
-		playerCommand := strings.Replace(os.Args[2], "--player-count=", "", 0)
+		playerCommand := strings.ReplaceAll(os.Args[2], "--player-count=", "")
 
 		// gets the given player count from the startup command
 		playerCount, err := strconv.ParseInt(playerCommand, 0, 0)

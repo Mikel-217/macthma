@@ -30,7 +30,7 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth := strings.Replace(authenticationHeader, "Basic ", "", 2)
+	auth := strings.ReplaceAll(authenticationHeader, "Basic ", "")
 
 	encoded, err := base64.StdEncoding.DecodeString(auth)
 
@@ -43,6 +43,7 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 	// its stored like this: username:PW
 	userCredentials := strings.Split(string(encoded), ":")
 
+	// has the pw
 	hashedPW, err := bcrypt.GenerateFromPassword([]byte(userCredentials[1]), 14)
 
 	if err != nil {
@@ -53,6 +54,7 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 
 	user := dbuser.GetUserByName(userCredentials[0])
 
+	// checks if the user has the right credentials
 	if user != nil && user.UserName != userCredentials[0] && user.UserPW != string(hashedPW) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -61,6 +63,7 @@ func HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// generates a token
 	token := generateToken(user)
 
 	if token == nil {
