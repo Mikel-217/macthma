@@ -15,10 +15,19 @@ import (
 // Middleware
 func handleAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.RemoteAddr)
 		logging.Log(logging.Information, r.RemoteAddr)
 
-		// TODO: check for authentication -> check if the accesstoken is in the db and valid
+		token := r.Header.Get("Autorization")
+
+		if token == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		if !authenticate(token) {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 
 		next.ServeHTTP(w, r)
 	})
@@ -26,6 +35,7 @@ func handleAuthentication(next http.Handler) http.Handler {
 }
 
 func main() {
+	// TODO: add server-console
 
 	if startup.CreateTables() {
 		logging.Log(logging.Information, "Setup successfull")
@@ -58,5 +68,4 @@ func main() {
 	mux.Handle("/join-match", handleAuthentication(http.HandlerFunc(user.HandlePlayerJoin)))
 
 	http.ListenAndServe(":8080", mux)
-
 }
