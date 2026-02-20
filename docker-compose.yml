@@ -5,7 +5,7 @@ services:
     command: ["/matchma", "--testing", "--player-count=200"] # only for testing
     depends_on:
       matchma-db:
-        condition: service_healthy
+        condition: service_healthy # we wait for the database to be fully ready
     environment:
       JWT-Secret: "Production_test_here_i_come" # Change this if production!
       DB-Conn: "matchma:1234@tcp(matchma-db:3306)/Matchma" # Change this if production!
@@ -17,10 +17,10 @@ services:
   matchma-db:
     image: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: "1234" # Change this if production!
-      MYSQL_DATABASE: "Matchma"
+      MYSQL_ROOT_PASSWORD: "1234" # Change this if production! Also deactivate the root access!
+      MYSQL_DATABASE: "Matchma" # DO NOT change this!
       MYSQL_USER: "matchma"
-      MYSQL_PASSWORD: "1234" # Change this if production!
+      MYSQL_PASSWORD: "1234" # Change this if production! Note that you have to change the connection string
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s

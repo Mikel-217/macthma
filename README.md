@@ -15,17 +15,25 @@ docker-compose up
 
 ```
 
-For production, uncomment the "command:" line 
+For production, follow the instructions in the [docker-compose](docker-compose.yml) file
 
 ## Enviromentvariables needed:
 - Database connection
 - JWT-Secret
 
+In the [docker-compose](docker-compose.yml) are examples for both.
+
 ## TODO:
-- Make middleware functional
 - Add tracking interface for matches
 - Add algorithm for creating lobby
 - Add UML -> because of school project :)
 - Make db_excecuter performant
+  - Batching Updates
+  - Bulk Updates
 
 ## Endpoints:
+### Post endpoints:
+- /login -> for sending the user an accesstoken
+- /register -> for a user to register
+### Get endpoints:
+- /join-match -> for creating a websocket
