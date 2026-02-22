@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"mikel-kunze.com/matchma/logging"
+	"mikel-kunze.com/matchma/matchmaking"
 	"mikel-kunze.com/matchma/startup"
 	"mikel-kunze.com/matchma/user"
 )
@@ -65,6 +66,7 @@ func main() {
 	mux.HandleFunc("POST /register", user.HandleUserRegister)
 
 	mux.Handle("/join-match", handleAuthentication(http.HandlerFunc(user.HandlePlayerJoin)))
+	mux.Handle("POST /match-data", handleAuthentication(http.HandlerFunc(matchmaking.HandleNewMatchData)))
 
 	http.ListenAndServe(":8080", mux)
 }
