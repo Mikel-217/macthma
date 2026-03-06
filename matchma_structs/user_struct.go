@@ -14,7 +14,7 @@ type UserInformation struct {
 	TotalKills    uint
 	TotalPlayTime int
 	TotalWins     uint
-	User          UserStruct
+	UserId        uint
 }
 
 // for storring user info from a specific match

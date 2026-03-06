@@ -25,6 +25,8 @@ func CreateTables() bool {
 		panic("db Cannot start. See logs")
 	}
 
+	defer db.Close()
+
 	currPath, _ := os.Getwd()
 	path := path.Join(currPath, "/startup/tables.json")
 

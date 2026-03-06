@@ -2,6 +2,7 @@ package matchmaking
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/websocket"
 	"mikel-kunze.com/matchma/logging"
@@ -65,6 +66,20 @@ var upgrader = websocket.Upgrader{
 // Handels upgrading a connection
 func (ws *WSServer) HandlePlayerJoin(w http.ResponseWriter, r *http.Request) {
 
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	urlQuery := r.URL.Query()
+	userId, err := strconv.Atoi(urlQuery.Get("user="))
+
+	if err != nil {
+		logging.Log(logging.Error, err.Error())
+		w.WriteHeader(http.StatusBadGateway)
+		return
+	}
+
 	newConn, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -72,10 +87,9 @@ func (ws *WSServer) HandlePlayerJoin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	// TODO: get the client id!!
 
 	client := Client{
-		UserId: 0,
+		UserId: uint(userId),
 		Conn:   newConn,
 		Send:   make(chan []byte),
 	}
@@ -86,6 +100,7 @@ func (ws *WSServer) HandlePlayerJoin(w http.ResponseWriter, r *http.Request) {
 	go client.handleConnection(ws)
 }
 
+// Handels the connection for a given client
 func (client *Client) handleConnection(ws *WSServer) {
-
+	// TODO: implement counter for how much people are also in the lobby
 }
