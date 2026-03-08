@@ -39,6 +39,11 @@ func (ws *WSServer) Run() {
 		select {
 		case newClient := <-ws.registerClient:
 			ws.Clients[newClient] = true
+
+			if ws.IsTesting || len(ws.Clients) == 20 {
+				ws.CreateLobbys()
+			}
+
 		case unregisterClient := <-ws.unregisterClient:
 			if _, ok := ws.Clients[unregisterClient]; ok {
 				delete(ws.Clients, unregisterClient)
@@ -100,7 +105,25 @@ func (ws *WSServer) HandlePlayerJoin(w http.ResponseWriter, r *http.Request) {
 	go client.handleConnection(ws)
 }
 
-// Handels the connection for a given client
+// Handels the connection from the client
 func (client *Client) handleConnection(ws *WSServer) {
-	// TODO: implement counter for how much people are also in the lobby
+	defer func() {
+		ws.unregisterClient <- client
+		client.Conn.Close()
+	}()
+
+	for {
+		message, ok := <-client.Send
+		if !ok {
+			client.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+			return
+		}
+
+		err := client.Conn.WriteMessage(websocket.TextMessage, message)
+
+		if err != nil {
+			logging.Log(logging.Error, "Write error: "+err.Error())
+			return
+		}
+	}
 }
