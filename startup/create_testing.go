@@ -52,8 +52,7 @@ func createRandomPlayerData(userId uint) {
 		playerTime := rand.IntN(int(playerPlace) + 100)
 
 		query := "INSERT INTO UserMatches VALUES(DEFAULT, ?, ?, ?, ?, ?);"
-		queryArgs := []string{strconv.FormatUint(playerPlace, 10), strconv.FormatUint(playerKills, 10), strconv.Itoa(playerTime), time.Now().Format("2006-01-02 15:04:05"), strconv.FormatUint(uint64(userId), 10)}
-
+		queryArgs := []string{strconv.FormatUint(playerPlace, 10), strconv.FormatUint(playerKills, 10), strconv.Itoa(playerTime), time.Now().AddDate(0, -rand.IntN(12), -rand.IntN(31)).Format("2006-01-02 15:04:05"), strconv.FormatUint(uint64(userId), 10)}
 		database.ExecuteSQL(query, queryArgs)
 	}
 }

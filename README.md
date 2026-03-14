@@ -24,10 +24,9 @@ For production, follow the instructions in the [docker-compose](docker-compose.y
 In the [docker-compose](docker-compose.yml) are examples for both.
 
 ## TODO:
-- Add tracking interface for matches
 - Add algorithm for creating lobby
 - Add UML -> because of school project :)
-- Make db_excecuter performant
+- Make db_excecuter performant -> some querys aren´t executed
   - Batching Updates
   - Bulk Updates
 
@@ -35,5 +34,6 @@ In the [docker-compose](docker-compose.yml) are examples for both.
 ### Post endpoints:
 - /login -> for sending the user an accesstoken
 - /register -> for a user to register
+- /match-data -> for creating new data based on the match
 ### Get endpoints:
 - /join-match -> for creating a websocket

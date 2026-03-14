@@ -14,6 +14,8 @@ func IsTokenThere(searchToken string) bool {
 		return false
 	}
 
+	defer db.Close()
+
 	result := db.QueryRow("SELECT * FROM AccessTokens WHERE TokenVal = ?;", searchToken)
 
 	if result.Err() != nil {

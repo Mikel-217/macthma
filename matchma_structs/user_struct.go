@@ -1,6 +1,8 @@
 package matchmastructs
 
-import "time"
+import (
+	"time"
+)
 
 type UserStruct struct {
 	UserId   uint
@@ -14,7 +16,7 @@ type UserInformation struct {
 	TotalKills    uint
 	TotalPlayTime int
 	TotalWins     uint
-	User          UserStruct
+	UserId        uint
 }
 
 // for storring user info from a specific match
@@ -25,4 +27,8 @@ type UserMatches struct {
 	UserPlayTime int // represents the minutes how long the player was in the given match
 	MatchDate    time.Time
 	UserId       uint // foreign key to Users Table
+}
+
+func (u *UserInformation) GetSkillScore() float64 {
+	return float64(u.TotalWins*10) + float64(u.TotalKills)
 }
