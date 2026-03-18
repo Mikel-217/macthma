@@ -25,7 +25,7 @@ func HandleUserInput() {
 		case 2:
 			AccesToken = HandleLogin()
 		case 3:
-			HandleRegistration()
+			HandleLobby()
 		default:
 			fmt.Println("Please answer correctly")
 			goto retry

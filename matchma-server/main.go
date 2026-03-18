@@ -55,7 +55,7 @@ func main() {
 	mux.HandleFunc("POST /login", user.HandleUserLogin)
 	mux.HandleFunc("POST /register", user.HandleUserRegister)
 
-	mux.Handle("/join-match", handleAuthentication(http.HandlerFunc(wsHandler)))
+	mux.Handle("GET /join-match", handleAuthentication(http.HandlerFunc(wsHandler)))
 	mux.Handle("POST /match-data", handleAuthentication(http.HandlerFunc(matchmaking.HandleNewMatchData)))
 
 	http.ListenAndServe(":8080", mux)

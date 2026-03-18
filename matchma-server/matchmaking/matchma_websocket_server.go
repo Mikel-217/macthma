@@ -49,7 +49,9 @@ func (ws *WSServer) Run() {
 				delete(ws.Clients, unregisterClient)
 				close(unregisterClient.Send)
 			}
+		// FIXME: why no messages?
 		case message := <-ws.Broadcast:
+			logging.Log(logging.Information, "Trying to broadcast..")
 			for client := range ws.Clients {
 				select {
 				case client.Send <- message:
@@ -77,11 +79,19 @@ func (ws *WSServer) HandlePlayerJoin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urlQuery := r.URL.Query()
-	userId, err := strconv.Atoi(urlQuery.Get("user="))
+	userIdstring := urlQuery.Get("user")
+
+	if userIdstring == "" {
+		logging.Log(logging.Error, "UserId nil")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	userId, err := strconv.Atoi(userIdstring)
 
 	if err != nil {
 		logging.Log(logging.Error, err.Error())
-		w.WriteHeader(http.StatusBadGateway)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

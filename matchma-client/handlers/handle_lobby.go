@@ -7,16 +7,19 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"strconv"
 
 	"github.com/gorilla/websocket"
 )
 
 func HandleLobby() {
 
-	u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/join-match"}
+	fmt.Println("Trying to connect...")
+
+	u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/join-match", RawQuery: "user=" + strconv.Itoa(201)}
 
 	header := make(http.Header)
-	header.Add("Authorization", "Baerer "+AccesToken)
+	header.Add("Authorization", "Bearer "+AccesToken)
 
 	conn, _, err := websocket.DefaultDialer.Dial(u.String(), header)
 

@@ -25,18 +25,23 @@ func HandleLogin() string {
 		HandleLogin()
 	}
 
-	headerVal := base64.StdEncoding.EncodeToString([]byte(userName + ":" + pw))
+	basicAuth := base64.StdEncoding.EncodeToString([]byte(userName + ":" + pw))
 
 	// build the request
 	req, _ := http.NewRequest("POST", UrlLogin, nil)
-	req.Header.Add("Authorization", "Basic: "+headerVal)
+	headerval := "Basic " + basicAuth
+	req.Header.Add("Authorization", headerval)
 
 	// send the request
 	response, err := http.DefaultClient.Do(req)
 
-	if err != nil || response.StatusCode != 200 {
+	if err != nil {
 		fmt.Println(err.Error())
 		HandleUserInput()
+	}
+
+	if response.StatusCode != 200 {
+		fmt.Println("Failed to login status:", response.StatusCode, response.Status)
 	}
 
 	bodyData, err := io.ReadAll(response.Body)
