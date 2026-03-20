@@ -32,7 +32,7 @@ func main() {
 
 		if err != nil {
 			logging.Log(logging.Error, err.Error())
-			// if an occurs set default val to 200
+			// if an error occurs set default val to 200
 			playerCount = 200
 		}
 
