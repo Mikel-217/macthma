@@ -19,9 +19,12 @@ func (ws *WSServer) CreateLobbys() {
 	ws.Broadcast <- []byte("Creating lobbys...")
 
 	if ws.IsTesting {
+		// TODO
 		sortingPlayer(dbuser.GetAllUserInfoForTesting())
+		ws.Broadcast <- []byte("Creating lobbys done")
 	} else {
 		// TODO: is not implemented yet
+		ws.Broadcast <- []byte("not implemented yet...")
 		dbuser.GetAllUserInfo()
 	}
 }
